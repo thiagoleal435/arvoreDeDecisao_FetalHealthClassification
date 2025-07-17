@@ -1,9 +1,7 @@
 import pandas as pd
 
-print(pd.__version__)
-
-'''try:
-    df = pd.read_csv('./dados/fatal_health.csv')
+try:
+    df = pd.read_csv('./dados/fetal_health.csv')
     print("Dados carregados com sucesso!")
     print(df.head()) # Mostra as primeiras 5 linhas para verificar
 except FileNotFoundError:
@@ -16,4 +14,4 @@ y = df[nome_da_coluna_alvo]
 print("\nFeatures (X) - Exemplo:")
 print(X.head())
 print("\nVariável Alvo (y) - Exemplo:")
-print(y.head())'''
+print(y.head())
