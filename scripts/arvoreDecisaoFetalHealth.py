@@ -40,10 +40,15 @@ def preprocessaEDivideDados(df, colunaAlvo, test_size=0.3, random_state=SEMENTE_
     X = df.drop(columns=[colunaAlvo])
     y = df[colunaAlvo]
 
+    # Verifica se a coluna alvo tem mais de um valor único para LabelEncoder
+    if y.nunique() < 2:
+        print(f"Erro: A coluna alvo '{colunaAlvo}' tem menos de 2 classes únicas. Não é um problema de classificação adequado.")
+        exit()
+        
     # Codificar a variável alvo categórica para numérica
     le = LabelEncoder()
     y_encoded = le.fit_transform(y)
-    print(f"Classes originais: {le.classes_}")
+    print(f"Classes originais:'{colunaAlvo}': {le.classes_}")
     print(f"Classes mapeadas para números: {dict(zip(le.classes_, le.transform(le.classes_)))}")
 
     # Dividir em conjuntos de treino e teste
@@ -78,12 +83,10 @@ def avaliaModelo(model, X_test, y_test, codifica_rotulos, caminho_relatorio, cam
     os.makedirs(os.path.dirname(caminho_matriz_de_confusao), exist_ok=True)
 
     # Salvar o relatório
-    with open(caminho_relatorio, 'w') as f:
+    with open(CAMINHO_RELATORIO, 'w') as f:
         f.write(f"Acurácia: {acuracia:.4f}\n\n")
         f.write("Relatório de Classificação:\n")
         f.write(relatorio)
-        f.write("\nMapeamento das classes:\n")
-        f.write(str(dict(zip(codifica_rotulos.classes_, codifica_rotulos.transform(codifica_rotulos.classes_)))))
     print(f"Relatório de classificação salvo em: {caminho_relatorio}")
 
     # Matriz de Confusão
@@ -94,8 +97,8 @@ def avaliaModelo(model, X_test, y_test, codifica_rotulos, caminho_relatorio, cam
     plt.xlabel('Previsto')
     plt.ylabel('Verdadeiro')
     plt.title('Matriz de Confusão')
-    plt.savefig(caminho_matriz_de_confusao)
-    plt.close()
+    plt.savefig(caminho_matriz_de_confusao) # Salva a imagem
+    plt.close() # Fecha a figura para liberar memória
     print(f"Matriz de Confusão salva em: {caminho_matriz_de_confusao}")
 
     # Salvar matriz de confusão como CSV
@@ -105,7 +108,8 @@ def avaliaModelo(model, X_test, y_test, codifica_rotulos, caminho_relatorio, cam
 def main():
     df = carregaDados(CAMINHO_DADOS)
     if df is not None:
-        nomeColunaAlvo = 'NSP'
+        # Assumindo 'NSP' como a coluna alvo. Adapte se for diferente.
+        nomeColunaAlvo = 'percentage_of_time_with_abnormal_long_term_variability'
         X_train, X_test, y_train, y_test, le = preprocessaEDivideDados(df, nomeColunaAlvo)
         
         model = treinaModelo(X_train, y_train)
