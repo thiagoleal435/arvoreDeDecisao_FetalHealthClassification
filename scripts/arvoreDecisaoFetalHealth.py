@@ -108,17 +108,17 @@ def avaliaModelo(model, X_test, y_test, codifica_rotulos, caminho_relatorio, cam
 def main():
     df = carregaDados(CAMINHO_DADOS)
     if df is not None:
-        # Assumindo 'NSP' como a coluna alvo. Adapte se for diferente.
-        nomeColunaAlvo = 'percentage_of_time_with_abnormal_long_term_variability'
+        # Assumindo 'fetal_health' como a coluna alvo. Adapte se for diferente.
+        nomeColunaAlvo = 'fetal_health'
         X_train, X_test, y_train, y_test, le = preprocessaEDivideDados(df, nomeColunaAlvo)
         
-        model = treinaModelo(X_train, y_train)
+        modelo = treinaModelo(X_train, y_train)
         
         os.makedirs(os.path.dirname(CAMINHO_MODELO_SALVO), exist_ok=True)
-        joblib.dump(model, CAMINHO_MODELO_SALVO)
+        joblib.dump(modelo, CAMINHO_MODELO_SALVO)
         print(f"Modelo salvo em: {CAMINHO_MODELO_SALVO}")
 
-        avaliaModelo(model, X_test, y_test, le, CAMINHO_RELATORIO, CAMINHO_MATRIZ_DE_CONFUSAO, CAMINHO_MATRIZ_DE_CONFUSAO_CSV)
+        avaliaModelo(modelo, X_test, y_test, le, CAMINHO_RELATORIO, CAMINHO_MATRIZ_DE_CONFUSAO, CAMINHO_MATRIZ_DE_CONFUSAO_CSV)
 
 if __name__ == "__main__":
     main()
